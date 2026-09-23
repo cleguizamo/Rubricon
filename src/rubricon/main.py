@@ -1,6 +1,7 @@
 """FastAPI application entrypoint."""
 
 from fastapi import FastAPI
+
 from rubricon import __version__
 
 app = FastAPI(
@@ -11,9 +12,9 @@ app = FastAPI(
 
 
 @app.get("/health", tags=["ops"])
-def health() -> dict[str,str]:
+def health() -> dict[str, str]:
     """Liveness probe: is this process alive and able to answer?
-    
+
     Deliberately has no dependencies - no database, no external calls.
     """
-    return{"status": "ok", "version": __version__}
+    return {"status": "ok", "version": __version__}
