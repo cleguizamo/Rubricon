@@ -27,9 +27,9 @@ def health() -> dict[str, str]:
     """
     return {"status": "ok", "version": __version__}
 
+
 @app.get("/readyz", tags=["ops"])
-def readyz(db: Session =
-        Depends(get_session)) -> dict[str, str]:
+def readyz(db: Session = Depends(get_session)) -> dict[str, str]:
     """Readiness probe: is this process ready to serve requests?
 
     This endpoint has a dependency on the database,
