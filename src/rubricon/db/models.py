@@ -1,4 +1,4 @@
-""""Persistenace models."""
+""" "Persistenace models."""
 
 from datetime import datetime
 
@@ -16,8 +16,6 @@ class Conversation(Base):
     external_id: Mapped[str] = mapped_column(String(128))
     source: Mapped[str] = mapped_column(String(64))
     payload: Mapped[dict] = mapped_column(JSONB)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     __table_args__ = (Index("idx_conversations_source_external_id", "source", "external_id"),)

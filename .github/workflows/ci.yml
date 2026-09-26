@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Lint and tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: rubricon
+          POSTGRES_PASSWORD: rubricon
+          POSTGRES_DB: rubricon
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U rubricon"
+          --health-interval 5s --health-timeout 3s --health-retries 10
+    env:
+      DATABASE_URL: postgresql+psycopg://rubricon:rubricon@localhost:5432/rubricon
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync --all-groups
+
+      - name: Ruff (lint)
+        run: uv run ruff check .
+
+      - name: Ruff (format check)
+        run: uv run ruff format --check .
+
+      - name: Run migrations
+        run: uv run alembic upgrade head
+
+      - name: Tests
+        run: uv run pytest -q
+
+      - name: Build Docker image
+        run: docker build -t rubricon:ci .
