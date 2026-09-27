@@ -82,6 +82,8 @@ jobs:
       - name: Deploy
         uses: google-github-actions/deploy-cloudrun@v2
         with:
+          secrets: |
+            DATABASE_URL=rubricon-database-url:latest
           service: rubricon-api
           region: us-central1
           image: ${{ env.IMAGE }}
