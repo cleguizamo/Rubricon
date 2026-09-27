@@ -25,4 +25,4 @@ ENV PATH="/app/.venv/bin:$PATH" PYTHONUNBUFFERED=1
 USER app
 EXPOSE 8000
 
-CMD ["sh", "-c", "uvicorn rubricon.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+CMD ["sh", "-c", "exec uvicorn rubricon.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
